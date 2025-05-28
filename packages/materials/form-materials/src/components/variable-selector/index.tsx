@@ -8,7 +8,7 @@ import { IJsonSchema } from '../../typings/json-schema';
 import { useVariableTree } from './use-variable-tree';
 import { UIRootTitle, UITag, UITreeSelect } from './styles';
 
-interface PropTypes {
+export interface PropTypes {
   value?: string[];
   config?: {
     placeholder?: string;
@@ -27,7 +27,7 @@ export type VariableSelectorProps = PropTypes;
 
 export const VariableSelector = ({
   value,
-  config,
+  config = {},
   onChange,
   style,
   readonly = false,

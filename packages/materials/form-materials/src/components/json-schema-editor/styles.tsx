@@ -46,37 +46,55 @@ export const UIProperties = styled.div<{ $shrink?: boolean }>`
     `}
 `;
 
-export const UIPropertyLeft = styled.div<{ $isLast?: boolean; $showLine?: boolean }>`
+export const UIPropertyLeft = styled.div<{
+  $isLast?: boolean;
+  $showLine?: boolean;
+  $isExpand?: boolean;
+  type?: string;
+  $isFirst?: boolean;
+  $index?: number;
+  $parentExpand?: boolean;
+  $parentType?: string;
+}>`
   grid-column: 1;
   position: relative;
+  width: 16px;
 
-  ${({ $showLine, $isLast }) =>
-    $showLine &&
-    css`
-      &::before {
-        /* 竖线 */
-        content: '';
-        position: absolute;
-        left: -22px;
-        top: -18px;
-        bottom: ${$isLast ? '12px' : '0px'};
-        width: 1px;
-        background: #d9d9d9;
-        display: block;
-      }
+  ${({ $showLine, $isLast, $parentType }) => {
+    let height = '100%';
+    if ($parentType && $isLast) {
+      height = '24px';
+    }
 
-      &::after {
-        /* 横线 */
-        content: '';
-        position: absolute;
-        left: -22px; // 横线起点和竖线对齐
-        top: 12px; // 跟随你的行高调整
-        width: 22px; // 横线长度
-        height: 1px;
-        background: #d9d9d9;
-        display: block;
-      }
-    `}
+    return (
+      $showLine &&
+      css`
+        &::before {
+          /* 竖线 */
+          content: '';
+          height: ${height};
+          position: absolute;
+          left: -22px;
+          top: -16px;
+          width: 1px;
+          background: #d9d9d9;
+          display: block;
+        }
+
+        &::after {
+          /* 横线 */
+          content: '';
+          position: absolute;
+          left: -22px; // 横线起点和竖线对齐
+          top: 8px; // 跟随你的行高调整
+          width: 18px; // 横线长度
+          height: 1px;
+          background: #d9d9d9;
+          display: block;
+        }
+      `
+    );
+  }}
 `;
 
 export const UIPropertyRight = styled.div`
@@ -88,18 +106,48 @@ export const UIPropertyRight = styled.div`
   }
 `;
 
-export const UIPropertyMain = styled.div<{ $expand?: boolean }>`
+export const UIPropertyMain = styled.div<{
+  $expand?: boolean;
+  type?: string;
+  $collapse?: boolean;
+  $showCollapse?: boolean;
+}>`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  position: relative;
 
-  ${({ $expand }) =>
-    $expand &&
-    css`
-      background-color: #f5f5f5;
-      padding: 10px;
-      border-radius: 4px;
-    `}
+  ${({ $expand, type, $collapse, $showCollapse }) => {
+    console.log('🚀 ~ $expand, type, $collapse:', $expand, type, $collapse);
+    const beforeElement = `
+      &::before {
+        /* 竖线 */
+        content: '';
+        height: 100%;
+        position: absolute;
+        left: -12px;
+        top: 18px;
+        width: 1px;
+        background: #d9d9d9;
+        display: block;
+      }`;
+
+    return (
+      $expand &&
+      css`
+        background-color: #f5f5f5;
+        padding: 10px;
+        border-radius: 4px;
+
+        ${$showCollapse &&
+        $collapse &&
+        (type === 'array' || type === 'object') &&
+        css`
+          ${beforeElement}
+        `}
+      `
+    );
+  }}
 `;
 
 export const UICollapsible = styled.div<{ $collapse?: boolean }>`
@@ -143,3 +191,36 @@ const iconAddChildrenSvg = (
 );
 
 export const IconAddChildren = () => <Icon size="small" svg={iconAddChildrenSvg} />;
+
+export const DefaultValueWrapper = styled.div`
+  margin: 0;
+`;
+
+export const JSONViewerWrapper = styled.div`
+  padding: 0 0 24px;
+  &:first-child {
+    margin-top: 0px;
+  }
+`;
+
+export const JSONHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--semi-color-fill-0);
+  border-radius: 6px 6px 0 0;
+  height: 36px;
+  padding: 0 8px 0 12px;
+`;
+
+export const JSONHeaderLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const JSONHeaderRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
