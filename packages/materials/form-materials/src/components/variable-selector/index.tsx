@@ -8,7 +8,7 @@ import { IJsonSchema } from '../../typings/json-schema';
 import { useVariableTree } from './use-variable-tree';
 import { UIRootTitle, UITag, UITreeSelect } from './styles';
 
-export interface PropTypes {
+interface PropTypes {
   value?: string[];
   config?: {
     placeholder?: string;
