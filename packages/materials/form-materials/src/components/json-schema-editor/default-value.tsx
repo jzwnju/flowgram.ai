@@ -1,10 +1,18 @@
 import React, { useRef, useState, useCallback } from 'react';
 
-import { IconButton, Input, InputNumber, Select, JsonViewer, Tooltip } from '@douyinfe/semi-ui';
+import { IconButton, JsonViewer, Tooltip } from '@douyinfe/semi-ui';
 import { IconBrackets } from '@douyinfe/semi-icons';
 
 import { getValueType } from './utils';
-import { JSONHeader, JSONHeaderLeft, JSONHeaderRight, JSONViewerWrapper } from './styles';
+import {
+  ConstantInputWrapper,
+  JSONHeader,
+  JSONHeaderLeft,
+  JSONHeaderRight,
+  JSONViewerWrapper,
+} from './styles';
+import { ConstantInput } from '../constant-input';
+import { IJsonSchema } from '../../typings';
 
 /**
  * 根据不同的数据类型渲染对应的默认值输入组件。
@@ -13,13 +21,14 @@ import { JSONHeader, JSONHeaderLeft, JSONHeaderRight, JSONViewerWrapper } from '
  */
 export function DefaultValue(props: {
   value: any;
+  schema?: IJsonSchema;
   name?: string;
   type?: string;
   placeholder?: string;
   jsonFormatText?: string;
   onChange: (value: any) => void;
 }) {
-  const { value, type, onChange, placeholder, jsonFormatText } = props;
+  const { value, schema, type, onChange, placeholder, jsonFormatText } = props;
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const JsonViewerRef = useRef<JsonViewer>(null);
@@ -62,37 +71,7 @@ export function DefaultValue(props: {
     }
   }, [internalJsonValue, onChange]);
 
-  return type === 'string' ? (
-    <Input
-      size="small"
-      value={value}
-      onChange={(val: string) => {
-        onChange(val);
-      }}
-      placeholder={placeholder ?? 'Default value if parameter is not provided'}
-    />
-  ) : type === 'integer' || type === 'number' ? (
-    <InputNumber
-      value={value}
-      precision={type === 'integer' ? 0 : undefined}
-      size="small"
-      placeholder={placeholder ?? 'Default value if parameter is not provided'}
-      style={{ width: '100%' }}
-      onChange={(val: string | number) => {
-        onChange(val);
-      }}
-    />
-  ) : type === 'boolean' ? (
-    <Select
-      size="small"
-      value={isNaN(Number(value)) ? 0 : Number(value)}
-      style={{ width: '100%' }}
-      onChange={(val: any) => onChange(Boolean(val))}
-    >
-      <Select.Option value={1}>true</Select.Option>
-      <Select.Option value={0}>false</Select.Option>
-    </Select>
-  ) : type === 'object' ? (
+  return type === 'object' ? (
     <>
       <JSONHeader>
         <JSONHeaderLeft>json</JSONHeaderLeft>
@@ -138,5 +117,14 @@ export function DefaultValue(props: {
         />
       </JSONViewerWrapper>
     </>
-  ) : null;
+  ) : (
+    <ConstantInputWrapper>
+      <ConstantInput
+        value={value}
+        onChange={(_v) => onChange(_v)}
+        schema={schema || { type: 'string' }}
+        placeholder={placeholder ?? 'Default value if parameter is not provided'}
+      />
+    </ConstantInputWrapper>
+  );
 }

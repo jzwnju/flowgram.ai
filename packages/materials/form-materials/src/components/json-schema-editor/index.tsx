@@ -212,6 +212,7 @@ function PropertyEdit(props: {
                   <DefaultValueWrapper>
                     <DefaultValue
                       value={defaultValue}
+                      schema={value}
                       type={type}
                       placeholder={config?.defaultValuePlaceholder}
                       jsonFormatText={config?.jsonFormatText}

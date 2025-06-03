@@ -223,3 +223,13 @@ export const JSONHeaderRight = styled.div`
   align-items: center;
   gap: 10px;
 `;
+
+export const ConstantInputWrapper = styled.div`
+  flex-grow: 1;
+
+  & .semi-tree-select,
+  & .semi-input-number,
+  & .semi-select {
+    width: 100%;
+  }
+`;
